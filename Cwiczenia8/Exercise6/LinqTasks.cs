@@ -283,7 +283,11 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<object> Task11()
         {
-            IEnumerable<object> result = null;
+            IEnumerable<object> result = from e in Emps
+                    join d in Depts on e.Deptno equals d.Deptno
+                    group e by d.Dname into gr
+                    where gr.Count()>1
+                    select new{Name=gr.Key, NumOfEmployees=gr.Count()} ;
             return result;
         }
 
@@ -328,6 +332,6 @@ namespace Exercise6
 
     public static class CustomExtensionMethods
     {
-        //Put your extension methods here
+        
     }
 }
