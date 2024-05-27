@@ -300,7 +300,7 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<Emp> Task12()
         {
-            IEnumerable<Emp> result = null;
+            IEnumerable<Emp> result =Emps.GetManagers();
             return result;
         }
 
@@ -313,7 +313,7 @@ namespace Exercise6
         /// </summary>
         public static int Task13(int[] arr)
         {
-            int result = 0;
+            int result = arr.GroupBy(i=>i).First(e=>e.Count()%2==1).Key;
             //result=
             return result;
         }
@@ -324,7 +324,12 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<Dept> Task14()
         {
-            IEnumerable<Dept> result = null;
+            IEnumerable<Dept> result = 
+                    from d in Depts
+                    join e in Emps on d.Deptno equals e.Deptno into gr
+                    where gr.Count()==5 || gr.Count()==0
+                    orderby d.Dname
+                    select d;
             //result =
             return result;
         }
@@ -332,6 +337,15 @@ namespace Exercise6
 
     public static class CustomExtensionMethods
     {
-        
+        public static IEnumerable<Emp> GetManagers(this IEnumerable<Emp> emps)
+        {
+            var result = from m in emps
+                join e in emps on m equals e.Mgr into subs
+                where subs.Any()
+                orderby m.Ename ascending, m.Salary descending
+                select m;
+
+            return result.Distinct();
+        }
     }
 }
